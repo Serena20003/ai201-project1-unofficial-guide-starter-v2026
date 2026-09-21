@@ -29,8 +29,8 @@
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size: N/A**
+**Overlap: 0**
 
 <!-- What about YOUR documents made you pick these numbers? Short posts and
      long sectioned guides don't want the same chunking, and "800 seemed
@@ -55,44 +55,44 @@ I did not specify a chunk size and overlap is essentially 0. This is because for
 
      Milestone 3. -->
 
-======================================================================
 Chunk 1  |  source: guide_accessibility.md#0  |  produced by: chunker.py::split_documents
-======================================================================
-```# Getting around the region with limited mobility
+```
+# Getting around the region with limited mobility
 An honest assessment rather than a promotional one. Some of these places are
-difficult and it is better to know in advance.```
+difficult and it is better to know in advance.
+```
 
-======================================================================
 Chunk 2  |  source: guide_corry_vale.md#5  |  produced by: chunker.py::split_documents
-======================================================================
-```# Corry Vale
+```
+# Corry Vale
 Where to stay
 
-Perhaps thirty beds in the entire valley, spread across two pubs and a handful of farmhouse rooms. In summer these are booked months ahead. Camping is permitted on two marked fields and nowhere else.```
+Perhaps thirty beds in the entire valley, spread across two pubs and a handful of farmhouse rooms. In summer these are booked months ahead. Camping is permitted on two marked fields and nowhere else.
+```
 
-======================================================================
 Chunk 3  |  source: guide_givens_mill.md#2  |  produced by: chunker.py::split_documents
-======================================================================
-```# Givens Mill
+```
+# Givens Mill
 Getting around
 
-Everything is on one street along the river. The mill is at one end and the church at the other, eight minutes apart. The riverside path continues in both directions for as far as you want to walk.```
+Everything is on one street along the river. The mill is at one end and the church at the other, eight minutes apart. The riverside path continues in both directions for as far as you want to walk.
+```
 
-======================================================================
 Chunk 4  |  source: guide_kestrelford.md#4  |  produced by: chunker.py::split_documents
-======================================================================
-```# Kestrelford
+```
+# Kestrelford
 What to see
 
-The market square on a Saturday morning is the main event and has run continuously since the 1400s. The parish church has a 13th-century tower you can climb for £2. The old trackbed walk runs six miles to the next village along an easy gradient and is the best half-day here.```
+The market square on a Saturday morning is the main event and has run continuously since the 1400s. The parish church has a 13th-century tower you can climb for £2. The old trackbed walk runs six miles to the next village along an easy gradient and is the best half-day here.
+```
 
-======================================================================
 Chunk 5  |  source: guide_pellew_sands.md#6  |  produced by: chunker.py::split_documents
-======================================================================
-```# Pellew Sands
+```
+# Pellew Sands
 When to go
 
-June and September for the beach without the crowds. July and August are busy and the town is at its most itself, for better and worse. Winter is bleak, largely closed, and has a following among people who like that sort of thing.```
+June and September for the beach without the crowds. July and August are busy and the town is at its most itself, for better and worse. Winter is bleak, largely closed, and has a following among people who like that sort of thing.
+```
 
 For each one, ask: could someone answer a question using only this,
 without reading what came before or after?
@@ -106,14 +106,14 @@ Well-described feedback from Claude on an issue I realized as soon as I saw chun
 <!-- One complete question and answer, pasted as text, with the source line
      visible. Milestone 4. -->
 
-**Question:**
+**Question: When is the busy season for Kestrelford?**
 
-**Answer:**
+**Answer: Based on the provided documents, August is busy with walkers in Kestrelford (*guide_kestrelford.md*).**
 
-```
-```
 
-**My relevance cutoff:**
+> Comments: The expected answer is "The months between May and September, especially August." but the provided answer only outputs August. The reason is in the "where to stay" subsection in guide_kestrelford, there is a sentence that outlines: "Booking ahead matters between May and September and not at all otherwise." This could be important when the user asks this question, wanting to know if they need to avoid this season. I'm not sure how to resolve this, and if it is an important fix.
+
+**My relevance cutoff: 0.7**
 
 <!-- The number you set in config.py, and how you got there.
 
@@ -126,7 +126,24 @@ Well-described feedback from Claude on an issue I realized as soon as I saw chun
 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| Which towns are the worst when it comes to getting around with limited mobility? | Yes | 0.561 |
+| When is the busy season for Kestrelford? | Yes | 0.246 |
+| Do I need to bring cash or can I pay with card mostly when I visit Givens Mill? | Yes | 0.461 |
+| What is the best season to visit Brightwater? | Yes | 0.305 |
+| Does Elder Ness have an airport? | Yes | 0.324 |
+| What is the capital of Mongolia? | No | 0.803 |
+| How do I change the oil in a diesel engine? | No | 0.886 |
+| Who won the 1994 World Cup? | No | 0.975 |
+| What is the recommended month to visit the Chinese rice farms? | No | 0.537 |
+| How do I write a for loop in Rust? | No | 0.838 |
+
+Initially, the threshold was 0.6, and it produced incorrect answers for:
+1. Q1: providing only 2 of the 4 towns that are difficult for limited mobility
+2. Q2: providing partial answer for busy season for Kestrelford, missing the season where booking hotel in advance is a must.
+3. Q4: providing partial answers for best season to visit Bright water.
+4. Q5: returns without an answer.
+
+When I changed the threshold to 0.7, the system produced improved answers for Q1 (fully correct), Q3 (covers more relevant information), and Q5 (correct answer). Q2 stays the same.
 
 ## How I Used AI
 
@@ -139,9 +156,19 @@ Well-described feedback from Claude on an issue I realized as soon as I saw chun
 
      Milestone 5. -->
 
-**1.**
+**1. I asked Claude to give me feedback on my chunker.**
 
-**2.**
+I used the prompt Milestone 3 provided:
+> Here are three chunks from my documents for my RAG system. For each one, tell me what question it could answer on its own. If it can't answer anything on its own, say so and tell me what's missing.
+
+It helped me verbalize the issue I'm encountering.
+
+**2. I asked Claude to debug my chunker code.**
+
+The chunker was stuck in an infinite loop, and I wasn't sure how to resolve it, so I asked Claude:
+> im trying to change split_documents in chunker.py for project 1. Why is it stuck in an infinite loop where the subheading position wraps back to 2 on line 127 when it's supposed to be finished? Please explain with succinct answer.
+
+It turned out to be an indexing issue.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never

@@ -23,11 +23,11 @@ names a target of "4 of 5", and four of three is not a thing.
 
 QUESTIONS = [
     # {"question": "...", "expects": "..."},
-    {"question": "", "expects": ""},
-    {"question": "", "expects": ""},
-    {"question": "", "expects": ""},
-    {"question": "", "expects": ""},
-    {"question": "", "expects": ""},
+    {"question": "Which towns are the worst when it comes to getting around with limited mobility?", "expects": "Kestrelford, Halden Bay, and Corry Vale."}, # guide_accessibility.md ## Difficult
+    {"question": "When is the busy season for Kestrelford?", "expects": "The months between May and September, especially August."}, # guide_kestrelford.md - ## Where to stay and ## When to go
+    {"question": "Do I need to bring cash or can I pay with card mostly when I visit Givens Mill?", "expects": "Cards are accepted almost everywhere now, but cash is still useful at the market and in smaller places"}, # guide_eating.md ## Practical and guide_givens_mill.md ## Practical notes
+    {"question": "What is the best season to visit Brightwater?", "expects": "Spring, especially late May."}, # guide_seasons.md ## Spring, March to May and guide_brightwater.md ## When to go
+    {"question": "Does Elder Ness have an airport?", "expects": "No."}, # guide_brightwater.md ## Getting there and guide_marchwood.md ## Getting there
 ]
 
 # Questions from a different world entirely. Your gate should refuse all five.
@@ -41,7 +41,7 @@ OUT_OF_SCOPE = [
     "What is the capital of Mongolia?",
     "How do I change the oil in a diesel engine?",
     "Who won the 1994 World Cup?",
-    "What is the recommended dosage of ibuprofen for a headache?",
+    "What is the recommended month to visit the Chinese rice farms?",
     "How do I write a for loop in Rust?",
 ]
 

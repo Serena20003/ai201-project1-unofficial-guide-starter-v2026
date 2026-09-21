@@ -26,6 +26,8 @@ contains the answer.
 <!-- e.g. "One of my questions is about a topic only two documents mention, so
      I expect that one to be hard." -->
 
+The last question does not actually have a direct source, it needs to deduce the town in question does not have an airport without it being mentioned in its guide, whereas airport is explicitly mentioned in other documents.
+
 ---
 
 ## 2. Every answer names a source
@@ -35,6 +37,8 @@ Every answer the system produces names at least one source document.
 **Why this target:**
 <!-- Why all five and not four? What about your setup makes that achievable —
      or what would have to go wrong for it not to be? -->
+
+It is important to make sure to ground the answers with at least one source because otherwise that defeats the purpose of the RAG system. The answers have to come from a source.
 
 ---
 
@@ -53,9 +57,11 @@ in at least 4 of 5 tries.
 <!-- What did your distances look like when you set the cutoff in Milestone 4?
      Was there a clean gap, or did the two groups overlap? -->
 
+The 4th out-of-scope question is relatively close to the corpus - it is a question about the best month to travel at a place. That question might be harder to distinguish as out-of-scope corectly. Other questions should be out-of-scope enough to not return a answer. 
+
 ---
 
-## 4. Something about your chunks
+## 4. The chunks include town names.
 
 <!-- YOU WRITE THIS ONE.
 
@@ -69,15 +75,15 @@ in at least 4 of 5 tries.
        - "No chunk is shorter than 200 characters, since anything below that
           in my corpus turned out to be a heading with no content under it." -->
 
-
+At least 4 of 5 sampled chunks include the town names that the information refers to.
 
 **Why this target:**
 
-
+This is important to measure because without a town name, the information is vague and unspecific; with an irrelevant town name, the information will be attributed to the incorrect town. The last question does not have a direct answer in the sources for the town in question, so the system will have a harder time getting a town name.
 
 ---
 
-## 5. Your choice
+## 5. The system is able to retrieve multiple relevant sources when the in-scope question spans multiple sources
 
 <!-- YOU WRITE THIS ONE TOO.
 
@@ -88,10 +94,12 @@ in at least 4 of 5 tries.
      outcome. -->
 
 
+At least 3 of 5 questions obtained all the sources that are outlined in `questions.py`.
+
 
 **Why this target:**
 
-
+3 of the 5 questions I chose specifically need to synthesize the answer from multiple sources, and 1 of the 5 questions needs to synthesize the answer from different sections of the same guide. This means the question with 1 source should definitely pass and the rest of the 4 questions should have a 50% success rate. Hence, I want to know if the system can obtain all of the required sources to generate the answer for at least 3 of the questions. 
 
 ---
 

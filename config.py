@@ -15,6 +15,9 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).parent
 load_dotenv(ROOT / ".env")
 
+# helper configs
+DEBUG = False
+
 
 # ─── The corpus you're working with ──────────────────────────────────────────
 # Change this to switch corpora, or pass --corpus on the command line.

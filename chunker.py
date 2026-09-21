@@ -80,7 +80,12 @@ def fallback_split(
     return chunks
 
 
-def split_documents(documents: list[Document]) -> list[Chunk]:
+def split_documents(
+        documents: list[Document],
+        chunk_size: int | None = None,
+        overlap: int | None = None,
+        debug: bool | None = None
+        ) -> list[Chunk]:
     """
     Split documents into chunks. ⚠️ REPLACE THE BODY OF THIS IN MILESTONE 3.
 
@@ -97,7 +102,50 @@ def split_documents(documents: list[Document]) -> list[Chunk]:
       - Would splitting on paragraph breaks keep more thoughts intact than
         splitting on a character count?
     """
-    return fallback_split(documents)
+
+    '''
+    my documents are long guides with a title (#), short description of the document, subsections with subtitles (##).
+    Subsections sometimes don't have the town names its information refers to. - important to include the title for each chunk
+    Subsections should be the chunks. But what if the subsections get too long? 
+    Extensibility: what if in the future there are sub-subsections (###)?
+    '''
+    chunk_size = chunk_size or config.CHUNK_SIZE
+    overlap = overlap or config.CHUNK_OVERLAP
+    debug = debug or config.DEBUG
+
+    if overlap >= chunk_size:
+        raise ValueError("overlap has to be smaller than chunk_size")
+
+    chunks: list[Chunk] = []
+    for doc in documents:
+        index = 0
+        text = doc.text
+        print("debug chunker.py split_documents() - Source: ", doc.source) if debug else None
+        title_end_pos = text.find("\n")
+        title = text[:title_end_pos] # assuming title is always the first thing in the guide
+        start = title_end_pos + 1
+        print("debug chunker.py split_documents() - Title: ", title) if debug else None
+        print("debug chunker.py split_documents() - Init start: ", start) if debug else None
+        while start < len(text):
+            subheading_pos = text.find("## ", start) # use start parameter in .find() to return the absolute index, rather than text[sliced].find(), which returns the relative index
+            if (subheading_pos == -1): 
+                subheading_pos = len(text) # handles last body section, reaching exit condition
+            print("debug chunker.py split_documents() - subheading_pos: ", subheading_pos + len("##")) if debug else None
+            body = text[start:subheading_pos].strip()
+            print("debug chunker.py split_documents() - body: ", body) if debug else None
+            if body:
+                chunks.append(
+                    Chunk(
+                        text=title + '\n' + body,
+                        source=doc.source,
+                        index=index,
+                        produced_by="chunker.py::split_documents",
+                    )
+                )
+                index += 1
+            start = subheading_pos + len("##") # avoiding "##" getting found again
+            print("debug chunker.py split_documents() - next sample: ", text[start:start+10]) if debug else None
+    return chunks
 
 
 def describe(chunks: list[Chunk]) -> str:

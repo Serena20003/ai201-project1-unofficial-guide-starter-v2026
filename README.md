@@ -42,6 +42,8 @@
 
      Milestone 3. -->
 
+I did not specify a chunk size and overlap is essentially 0. This is because for the travel guides, the sections are more meaningful than a fixed length. Also, the maximum size of a section is less than 800, the default chunk size, which is reasonable. Instead of using predefined chunk size, I chunk by using subheadings to add subsections as chunks along with the overall title for the guide. This is because especially regional guides have repeated subsection headings and assumes the reader knows what town the subsection is for. However, the RAG system would not have the context if the chunks do not include the overall title. Hence, I included the title of the guide in all the chunk from the same guide.
+
 ## Sample Chunks
 
 <!-- Five chunks, pasted as text. Label each one and name the file it came from
@@ -53,30 +55,51 @@
 
      Milestone 3. -->
 
-**Chunk 1** — source: `` — produced by: ``
+======================================================================
+Chunk 1  |  source: guide_accessibility.md#0  |  produced by: chunker.py::split_documents
+======================================================================
+```# Getting around the region with limited mobility
+An honest assessment rather than a promotional one. Some of these places are
+difficult and it is better to know in advance.```
 
-```
-```
+======================================================================
+Chunk 2  |  source: guide_corry_vale.md#5  |  produced by: chunker.py::split_documents
+======================================================================
+```# Corry Vale
+Where to stay
 
-**Chunk 2** — source: `` — produced by: ``
+Perhaps thirty beds in the entire valley, spread across two pubs and a handful of farmhouse rooms. In summer these are booked months ahead. Camping is permitted on two marked fields and nowhere else.```
 
-```
-```
+======================================================================
+Chunk 3  |  source: guide_givens_mill.md#2  |  produced by: chunker.py::split_documents
+======================================================================
+```# Givens Mill
+Getting around
 
-**Chunk 3** — source: `` — produced by: ``
+Everything is on one street along the river. The mill is at one end and the church at the other, eight minutes apart. The riverside path continues in both directions for as far as you want to walk.```
 
-```
-```
+======================================================================
+Chunk 4  |  source: guide_kestrelford.md#4  |  produced by: chunker.py::split_documents
+======================================================================
+```# Kestrelford
+What to see
 
-**Chunk 4** — source: `` — produced by: ``
+The market square on a Saturday morning is the main event and has run continuously since the 1400s. The parish church has a 13th-century tower you can climb for £2. The old trackbed walk runs six miles to the next village along an easy gradient and is the best half-day here.```
 
-```
-```
+======================================================================
+Chunk 5  |  source: guide_pellew_sands.md#6  |  produced by: chunker.py::split_documents
+======================================================================
+```# Pellew Sands
+When to go
 
-**Chunk 5** — source: `` — produced by: ``
+June and September for the beach without the crowds. July and August are busy and the town is at its most itself, for better and worse. Winter is bleak, largely closed, and has a following among people who like that sort of thing.```
 
-```
-```
+For each one, ask: could someone answer a question using only this,
+without reading what came before or after?
+
+Well-described feedback from Claude on an issue I realized as soon as I saw chunk 1 but, don't know how to solve yet:
+> Chunk 1 — answers nothing on its own. It's the document's title plus its framing sentence: "An honest assessment rather than a promotional one." There's no fact in it. If someone asked "which places in the region are hard to get around with limited mobility?" this chunk would probably retrieve well (it has the right words) and then tell them nothing — the worst case for a RAG system. What's missing is the actual content: which towns, which specific barriers, what's step-free.
+> This is your chunker emitting the pre-first-## description as chunk 0. Worth deciding deliberately what to do with that text — drop it, or attach it to every chunk from that document the way you're already attaching the title.
 
 ## Sample Answer
 

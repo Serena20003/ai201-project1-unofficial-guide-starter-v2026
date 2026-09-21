@@ -27,6 +27,8 @@
 
      Milestone 5. -->
 
+This system answers questions about travelling to one of the towns in the following: Brightwater, Corry Vale, Elder Ness, Givens Mill, Halden Bay, Kestrelford, Marchwood, Pellew Sands, and Thornby Wells. Especially questions regarding when to travel, what to see, and the suitability of travelling. This system does not answer unrelated questions. 
+
 ## Chunking Strategy
 
 **Chunk size: N/A**
@@ -168,7 +170,7 @@ It helped me verbalize the issue I'm encountering.
 The chunker was stuck in an infinite loop, and I wasn't sure how to resolve it, so I asked Claude:
 > im trying to change split_documents in chunker.py for project 1. Why is it stuck in an infinite loop where the subheading position wraps back to 2 on line 127 when it's supposed to be finished? Please explain with succinct answer.
 
-It turned out to be an indexing issue.
+Claude explained the issue. It turned out to be an indexing issue.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
